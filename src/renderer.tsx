@@ -4,36 +4,45 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import * as child from "child_process";
-// import { promisify } from "util";
+import { ACSEngine } from "./ACSEngine";
 
 class App extends React.Component {
-  public static async callACS(): Promise<string> {
-    return new Promise<string>(resolve => {
-      child.exec("acs-engine", (error, stdout, stderr) => {
-        error && console.error(error.message);
-        stderr && console.error(stderr);
-        stdout && console.log(stdout);
-        return resolve(stdout);
-      });
-    });
-  }
+  public state: { stdout: string } = {
+    stdout: "",
+  };
 
   public render() {
     return (
-      <div className="App">
-        <h1 className="header">THIS IS REACT</h1>
-        <div>Do whatever you want now!</div>
-        <button
-          className="acs-test"
-          onClick={() => {
-            App.callACS();
-          }}
-        >
-          click me!
-        </button>
+      <div className="App container">
+        <div className="row">
+          <button className="acs" onClick={this.checkACSEngine.bind(this)}>
+            Check acs-engine binary is executable
+          </button>
+          <button className="acs-test" onClick={this.callACSEngine.bind(this)}>
+            Check for acs-engine in $PATH
+          </button>
+          <pre className="stdout">
+            <code>{this.state.stdout}</code>
+          </pre>
+        </div>
       </div>
     );
+  }
+
+  private log(out: string) {
+    const withNewLine: string = !!out.match(/\n$/) ? out : out + "\n";
+    const stdout: string = withNewLine + this.state.stdout;
+    this.setState({ stdout });
+  }
+
+  private async checkACSEngine() {
+    const isInstalled = await ACSEngine.acsIsInstalled();
+    this.log(`Packaged acs-engine executable: ${isInstalled}\n`);
+  }
+
+  private async callACSEngine() {
+    const stdout = await ACSEngine.call();
+    this.log(stdout);
   }
 }
 

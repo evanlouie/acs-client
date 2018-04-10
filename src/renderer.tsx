@@ -5,10 +5,56 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
 
+import { ACSClusterDefinitionForm, IClusterDefinition } from "./ACSClusterDefinitionForm";
 import { ACSEngine } from "./ACSEngine";
 
 class App extends React.Component {
-  public state: { stdout: string } = {
+  public state: { stdout: string; clusterDefn: IClusterDefinition } = {
+    // tslint:disable
+    clusterDefn: {
+      apiVersion: "vlabs",
+      properties: {
+        orchestratorProfile: {
+          orchestratorType: "Kubernetes",
+          orchestratorRelease: "1.9",
+          kubernetesConfig: {
+            apiServerConfig: {
+              "--admission-control":
+                "NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DenyEscalatingExec,Initializers,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota",
+              "--runtime-config": "admissionregistration.k8s.io/v1alpha1",
+            },
+          },
+        },
+        masterProfile: {
+          count: 1,
+          dnsPrefix: "",
+          vmSize: "Standard_DS2_v2",
+        },
+        agentPoolProfiles: [
+          {
+            name: "agentpool1",
+            count: 2,
+            vmSize: "Standard_DS2_v2",
+            availabilityProfile: "AvailabilitySet",
+          },
+        ],
+        linuxProfile: {
+          adminUsername: "azureuser",
+          ssh: {
+            publicKeys: [
+              {
+                keyData: "",
+              },
+            ],
+          },
+        },
+        servicePrincipalProfile: {
+          clientId: "",
+          secret: "",
+        },
+      },
+    },
+    // tslint:enable
     stdout: "",
   };
 
@@ -27,81 +73,10 @@ class App extends React.Component {
           </pre>
         )}
         <Container>
-          <Row>
-            <Col>
-              <h4>Configure ACS-Engine JSON</h4>
-              <Form>
-                <FormGroup>
-                  <Label for="apiVersion">apiVersion</Label>
-                  <Input type="text" name="apiVersion" id="apiVersion" defaultValue="vlabs" />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="examplePassword">Password</Label>
-                  <Input
-                    type="password"
-                    name="password"
-                    id="examplePassword"
-                    placeholder="password placeholder"
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleSelect">Select</Label>
-                  <Input type="select" name="select" id="exampleSelect">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </Input>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleSelectMulti">Select Multiple</Label>
-                  <Input type="select" name="selectMulti" id="exampleSelectMulti" multiple>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </Input>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleText">Text Area</Label>
-                  <Input type="textarea" name="text" id="exampleText" />
-                </FormGroup>
-                <FormGroup tag="fieldset">
-                  <legend>Radio Buttons</legend>
-                  <FormGroup check>
-                    <Label check>
-                      <Input type="radio" name="radio1" /> Option one is this and that—be sure to
-                      include why it's great
-                    </Label>
-                  </FormGroup>
-                  <FormGroup check>
-                    <Label check>
-                      <Input type="radio" name="radio1" /> Option two can be something else and
-                      selecting it will deselect option one
-                    </Label>
-                  </FormGroup>
-                  <FormGroup check disabled>
-                    <Label check>
-                      <Input type="radio" name="radio1" disabled /> Option three is disabled
-                    </Label>
-                  </FormGroup>
-                </FormGroup>
-                <FormGroup check>
-                  <Label check>
-                    <Input type="checkbox" /> Check me out
-                  </Label>
-                </FormGroup>
-              </Form>
-            </Col>
-            <Col>
-              <h4>JSON</h4>
-              <pre>
-                <code>THIS IS YOUR JSON</code>
-              </pre>
-            </Col>
-          </Row>
+          <ACSClusterDefinitionForm
+            apiVersion={this.state.clusterDefn.apiVersion}
+            properties={this.state.clusterDefn.properties}
+          />
           <Row>
             <Col>
               <div className="float-right">

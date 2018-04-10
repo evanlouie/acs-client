@@ -8,10 +8,10 @@
 
 // AADProfile specifies attributes for AAD integration
 interface IAADProfile {
-  clientAppID?: string;
-  serverAppID?: string;
-  tenantID?: string;
-  adminGroupID?: string;
+  clientAppID: string;
+  serverAppID: string;
+  tenantID: string;
+  adminGroupID: string;
 }
 
 // AgentPoolProfile represents an agent pool definition
@@ -19,22 +19,22 @@ interface IAgentPoolProfile {
   name: string;
   count: number;
   vmSize: string;
-  osDiskSizeGB?: number;
-  dnsPrefix?: string;
-  osType?: OSType;
-  ports?: number[];
-  availabilityProfile?: string;
-  storageProfile?: string;
-  diskSizesGB?: number[];
-  vnetSubnetID?: string;
-  ipAddressCount?: number;
-  distro?: Distro;
+  osDiskSizeGB: number;
+  dnsPrefix: string;
+  osType: OSType;
+  ports: number[];
+  availabilityProfile: string;
+  storageProfile: string;
+  diskSizesGB: number[];
+  vnetSubnetID: string;
+  ipAddressCount: number;
+  distro: Distro;
   kubernetesConfig?: IKubernetesConfig;
-  subnet?: string;
-  fqdn?: string;
-  customNodeLabels?: { [key: string]: string };
+  subnet: string;
+  fqdn: string;
+  customNodeLabels: { [key: string]: string };
   preProvisionExtension?: IExtension;
-  extensions?: IExtension[];
+  extensions: IExtension[];
 }
 
 // CertificateProfile represents the definition of the master cluster
@@ -48,20 +48,20 @@ interface IAgentPoolProfile {
 //    <NAME> is the name of the secret
 //    <VERSION> (optional) is the version of the secret (default: the latest version)
 interface ICertificateProfile {
-  caCertificate?: string;
-  caPrivateKey?: string;
-  apiServerCertificate?: string;
-  apiServerPrivateKey?: string;
-  clientCertificate?: string;
-  clientPrivateKey?: string;
-  kubeConfigCertificate?: string;
-  kubeConfigPrivateKey?: string;
-  etcdServerCertificate?: string;
-  etcdServerPrivateKey?: string;
-  etcdClientCertificate?: string;
-  etcdClientPrivateKey?: string;
-  etcdPeerCertificates?: string[];
-  etcdPeerPrivateKeys?: string[];
+  caCertificate: string;
+  caPrivateKey: string;
+  apiServerCertificate: string;
+  apiServerPrivateKey: string;
+  clientCertificate: string;
+  clientPrivateKey: string;
+  kubeConfigCertificate: string;
+  kubeConfigPrivateKey: string;
+  etcdServerCertificate: string;
+  etcdServerPrivateKey: string;
+  etcdClientCertificate: string;
+  etcdClientPrivateKey: string;
+  etcdPeerCertificates: string[];
+  etcdPeerPrivateKeys: string[];
 }
 
 // ClassicAgentPoolProfileType represents types of classic profiles
@@ -70,32 +70,32 @@ type ClassicAgentPoolProfileType = string;
 // CloudProviderConfig contains the KubernetesConfig parameters specific to the Cloud Provider
 // TODO use this when strict JSON checking accommodates struct embedding
 interface ICloudProviderConfig {
-  cloudProviderBackoff?: boolean;
-  cloudProviderBackoffRetries?: number;
-  cloudProviderBackoffJitter?: number;
-  cloudProviderBackoffDuration?: number;
-  cloudProviderBackoffExponent?: number;
-  cloudProviderRateLimit?: boolean;
-  cloudProviderRateLimitQPS?: number;
-  cloudProviderRateLimitBucket?: number;
+  cloudProviderBackoff: boolean;
+  cloudProviderBackoffRetries: number;
+  cloudProviderBackoffJitter: number;
+  cloudProviderBackoffDuration: number;
+  cloudProviderBackoffExponent: number;
+  cloudProviderRateLimit: boolean;
+  cloudProviderRateLimitQPS: number;
+  cloudProviderRateLimitBucket: number;
 }
 
 // ContainerService complies with the ARM model of
 // resource definition in a JSON template.
 interface IContainerService {
-  id?: string;
-  location?: string;
-  name?: string;
+  id: string;
+  location: string;
+  name: string;
   plan?: IResourcePurchasePlan;
-  tags?: { [key: string]: string };
-  type?: string;
+  tags: { [key: string]: string };
+  type: string;
   properties?: IProperties;
 }
 
 // DcosConfig Configuration for DC/OS
 interface IDcosConfig {
-  dcosBootstrapURL?: string;
-  dcosWindowsBootstrapURL?: string;
+  dcosBootstrapURL: string;
+  dcosWindowsBootstrapURL: string;
 }
 
 // Distro represents Linux distro to use for Linux VMs
@@ -103,20 +103,20 @@ type Distro = string;
 
 // Extension represents an extension definition in the master or agentPoolProfile
 interface IExtension {
-  name?: string;
-  singleOrAll?: string;
-  template?: string;
+  name: string;
+  singleOrAll: string;
+  template: string;
 }
 
 // ExtensionProfile represents an extension definition
 interface IExtensionProfile {
-  name?: string;
-  version?: string;
-  extensionParameters?: string;
+  name: string;
+  version: string;
+  extensionParameters: string;
   parametersKeyvaultSecretRef?: IKeyvaultSecretRef;
-  rootURL?: string;
-  script?: string;
-  urlQuery?: string;
+  rootURL: string;
+  script: string;
+  urlQuery: string;
 }
 
 // KeyVaultCertificate specifies a certificate to install
@@ -125,13 +125,13 @@ interface IExtensionProfile {
 // and <UppercaseThumbprint>.prv for the private key. Both of these files are .pem formatted.
 // On windows the certificate will be saved in the specified store.
 interface IKeyVaultCertificate {
-  certificateUrl?: string;
-  certificateStore?: string;
+  certificateUrl: string;
+  certificateStore: string;
 }
 
 // KeyVaultID specifies a key vault
 interface IKeyVaultID {
-  id?: string;
+  id: string;
 }
 
 // KeyVaultSecrets specifies certificates to install on the pool
@@ -139,7 +139,7 @@ interface IKeyVaultID {
 // the key vault specified must have been granted read permissions to CRP
 interface IKeyVaultSecrets {
   sourceVault?: IKeyVaultID;
-  vaultCertificates?: IKeyVaultCertificate[];
+  vaultCertificates: IKeyVaultCertificate[];
 }
 
 // KeyvaultSecretRef is a reference to a secret in a keyvault.
@@ -154,75 +154,75 @@ interface IKeyVaultSecrets {
 interface IKeyvaultSecretRef {
   vaultID: string;
   secretName: string;
-  version?: string;
+  version: string;
 }
 
 // KubernetesAddon defines a list of addons w/ configuration to include with the cluster deployment
 interface IKubernetesAddon {
-  name?: string;
+  name: string;
   enabled?: boolean;
-  containers?: IKubernetesContainerSpec[];
-  config?: { [key: string]: string };
+  containers: IKubernetesContainerSpec[];
+  config: { [key: string]: string };
 }
 
 // KubernetesConfig contains the Kubernetes config structure, containing
 // Kubernetes specific configuration
 interface IKubernetesConfig {
-  kubernetesImageBase?: string;
-  clusterSubnet?: string;
-  dnsServiceIP?: string;
-  serviceCidr?: string;
-  networkPolicy?: string;
-  containerRuntime?: string;
-  maxPods?: number;
-  dockerBridgeSubnet?: string;
-  useManagedIdentity?: boolean;
-  customHyperkubeImage?: string;
-  dockerEngineVersion?: string;
-  customCcmImage?: string;
+  kubernetesImageBase: string;
+  clusterSubnet: string;
+  dnsServiceIP: string;
+  serviceCidr: string;
+  networkPolicy: string;
+  containerRuntime: string;
+  maxPods: number;
+  dockerBridgeSubnet: string;
+  useManagedIdentity: boolean;
+  customHyperkubeImage: string;
+  dockerEngineVersion: string;
+  customCcmImage: string;
   useCloudControllerManager?: boolean;
   useInstanceMetadata?: boolean;
   enableRbac?: boolean;
   enableSecureKubelet?: boolean;
-  enableAggregatedAPIs?: boolean;
-  gchighthreshold?: number;
-  gclowthreshold?: number;
-  etcdVersion?: string;
-  etcdDiskSizeGB?: string;
+  enableAggregatedAPIs: boolean;
+  gchighthreshold: number;
+  gclowthreshold: number;
+  etcdVersion: string;
+  etcdDiskSizeGB: string;
   enableDataEncryptionAtRest?: boolean;
   enablePodSecurityPolicy?: boolean;
-  addons?: IKubernetesAddon[];
-  kubeletConfig?: { [key: string]: string };
-  controllerManagerConfig?: { [key: string]: string };
-  cloudControllerManagerConfig?: { [key: string]: string };
-  apiServerConfig?: { [key: string]: string };
-  cloudProviderBackoff?: boolean;
-  cloudProviderBackoffRetries?: number;
-  cloudProviderBackoffJitter?: number;
-  cloudProviderBackoffDuration?: number;
-  cloudProviderBackoffExponent?: number;
-  cloudProviderRateLimit?: boolean;
-  cloudProviderRateLimitQPS?: number;
-  cloudProviderRateLimitBucket?: number;
+  addons: IKubernetesAddon[];
+  kubeletConfig: { [key: string]: string };
+  controllerManagerConfig: { [key: string]: string };
+  cloudControllerManagerConfig: { [key: string]: string };
+  apiServerConfig: { [key: string]: string };
+  cloudProviderBackoff: boolean;
+  cloudProviderBackoffRetries: number;
+  cloudProviderBackoffJitter: number;
+  cloudProviderBackoffDuration: number;
+  cloudProviderBackoffExponent: number;
+  cloudProviderRateLimit: boolean;
+  cloudProviderRateLimitQPS: number;
+  cloudProviderRateLimitBucket: number;
 }
 
 // KubernetesContainerSpec defines configuration for a container spec
 interface IKubernetesContainerSpec {
-  name?: string;
-  image?: string;
-  cpuRequests?: string;
-  memoryRequests?: string;
-  cpuLimits?: string;
-  memoryLimits?: string;
+  name: string;
+  image: string;
+  cpuRequests: string;
+  memoryRequests: string;
+  cpuLimits: string;
+  memoryLimits: string;
 }
 
 // LinuxProfile represents the linux parameters passed to the cluster
 interface ILinuxProfile {
   adminUsername: string;
   // ssh: Object; // Not sure what should be
-  ssh: { publicKeys: Array<{ keyData: string }> };
-  secrets?: IKeyVaultSecrets[];
-  scriptroot?: string;
+  ssh: { pulicKeys: Array<{ keyData: string }> };
+  secrets: IKeyVaultSecrets[];
+  scriptroot: string;
 }
 
 // MasterProfile represents the definition of the master cluster
@@ -230,20 +230,20 @@ interface IMasterProfile {
   count: number;
   dnsPrefix: string;
   vmSize: string;
-  osDiskSizeGB?: number;
-  vnetSubnetID?: string;
-  vnetCidr?: string;
-  firstConsecutiveStaticIP?: string;
-  ipAddressCount?: number;
-  storageProfile?: string;
-  HTTPSourceAddressPrefix?: string;
-  oauthEnabled?: boolean;
+  osDiskSizeGB: number;
+  vnetSubnetID: string;
+  vnetCidr: string;
+  firstConsecutiveStaticIP: string;
+  ipAddressCount: number;
+  storageProfile: string;
+  HTTPSourceAddressPrefix: string;
+  oauthEnabled: boolean;
   preProvisionExtension?: IExtension;
-  extensions?: IExtension[];
-  distro?: Distro;
+  extensions: IExtension[];
+  distro: Distro;
   kubernetesConfig?: IKubernetesConfig;
-  subnet?: string;
-  fqdn?: string;
+  subnet: string;
+  fqdn: string;
 }
 
 // OSType represents OS types of agents
@@ -252,36 +252,24 @@ type OSType = string;
 // OrchestratorProfile contains Orchestrator properties
 interface IOrchestratorProfile {
   orchestratorType: string;
-  orchestratorRelease?: string;
-  orchestratorVersion?: string;
+  orchestratorRelease: string;
+  orchestratorVersion: string;
   kubernetesConfig?: IKubernetesConfig;
   dcosConfig?: IDcosConfig;
 }
 
 // Properties represents the ACS cluster definition
 export interface IProperties {
-  provisioningState?: ProvisioningState;
-  orchestratorProfile: IOrchestratorProfile;
-  masterProfile: IMasterProfile;
-  agentPoolProfiles: IAgentPoolProfile[];
-  linuxProfile: ILinuxProfile;
+  provisioningState: ProvisioningState;
+  orchestratorProfile?: IOrchestratorProfile;
+  masterProfile?: IMasterProfile;
+  agentPoolProfiles?: IAgentPoolProfile[];
+  linuxProfile?: ILinuxProfile;
   extensionProfiles?: IExtensionProfile[];
   windowsProfile?: IWindowsProfile;
   servicePrincipalProfile?: IServicePrincipalProfile;
   certificateProfile?: ICertificateProfile;
   aadProfile?: IAADProfile;
-  [key: string]:
-    | undefined
-    | IOrchestratorProfile
-    | IMasterProfile
-    | IAgentPoolProfile[]
-    | ILinuxProfile
-    | ProvisioningState
-    | IExtensionProfile[]
-    | IWindowsProfile
-    | IServicePrincipalProfile
-    | ICertificateProfile
-    | IAADProfile;
 }
 
 // ProvisioningState represents the current state of container service resource.
@@ -289,16 +277,16 @@ type ProvisioningState = string;
 
 // PublicKey represents an SSH key for LinuxProfile
 interface IPublicKey {
-  keyData?: string;
+  keyData: string;
 }
 
 // ResourcePurchasePlan defines resource plan as required by ARM
 // for billing purposes.
 interface IResourcePurchasePlan {
-  name?: string;
-  product?: string;
-  promotionCode?: string;
-  publisher?: string;
+  name: string;
+  product: string;
+  promotionCode: string;
+  publisher: string;
 }
 
 // ServicePrincipalProfile contains the client and secret used by the cluster for Azure Resource CRUD
@@ -306,16 +294,16 @@ interface IResourcePurchasePlan {
 // The 'Secret' parameter should be a secret in plain text.
 // The 'KeyvaultSecretRef' parameter is a reference to a secret in a keyvault.
 interface IServicePrincipalProfile {
-  clientId?: string;
-  secret?: string;
+  clientId: string;
+  secret: string;
   keyvaultSecretRef?: IKeyvaultSecretRef;
 }
 
 // WindowsProfile represents the windows parameters passed to the cluster
 interface IWindowsProfile {
-  adminUsername?: string;
-  adminPassword?: string;
-  imageVersion?: string;
-  WindowsImageSourceUrl?: string;
-  secrets?: IKeyVaultSecrets[];
+  adminUsername: string;
+  adminPassword: string;
+  imageVersion: string;
+  WindowsImageSourceUrl: string;
+  secrets: IKeyVaultSecrets[];
 }

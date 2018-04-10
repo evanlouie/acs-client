@@ -3,7 +3,7 @@
 // All of the Node.js APIs are available in this process.
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Button, Col, Container, Form, FormGroup, FormText, Input, Label, Row } from "reactstrap";
+import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
 
 import { ACSEngine } from "./ACSEngine";
 
@@ -21,22 +21,19 @@ class App extends React.Component {
         <button className="acs-test" onClick={this.callACSEngine.bind(this)}>
           Check for acs-engine in $PATH
         </button>
-        <pre className="stdout">
-          <code>{this.state.stdout}</code>
-        </pre>
+        {this.state.stdout && (
+          <pre className="stdout">
+            <code>{this.state.stdout}</code>
+          </pre>
+        )}
         <Container>
           <Row>
             <Col>
               <h4>Configure ACS-Engine JSON</h4>
               <Form>
                 <FormGroup>
-                  <Label for="exampleEmail">Email</Label>
-                  <Input
-                    type="email"
-                    name="email"
-                    id="exampleEmail"
-                    placeholder="with a placeholder"
-                  />
+                  <Label for="apiVersion">apiVersion</Label>
+                  <Input type="text" name="apiVersion" id="apiVersion" defaultValue="vlabs" />
                 </FormGroup>
                 <FormGroup>
                   <Label for="examplePassword">Password</Label>
@@ -71,14 +68,6 @@ class App extends React.Component {
                   <Label for="exampleText">Text Area</Label>
                   <Input type="textarea" name="text" id="exampleText" />
                 </FormGroup>
-                <FormGroup>
-                  <Label for="exampleFile">File</Label>
-                  <Input type="file" name="file" id="exampleFile" />
-                  <FormText color="muted">
-                    This is some placeholder block-level help text for the above input. It's a bit
-                    lighter and easily wraps to a new line.
-                  </FormText>
-                </FormGroup>
                 <FormGroup tag="fieldset">
                   <legend>Radio Buttons</legend>
                   <FormGroup check>
@@ -104,7 +93,6 @@ class App extends React.Component {
                     <Input type="checkbox" /> Check me out
                   </Label>
                 </FormGroup>
-                <Button>Submit</Button>
               </Form>
             </Col>
             <Col>
@@ -112,6 +100,13 @@ class App extends React.Component {
               <pre>
                 <code>THIS IS YOUR JSON</code>
               </pre>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <div className="float-right">
+                <Button color="primary">Deploy!</Button>
+              </div>
             </Col>
           </Row>
         </Container>

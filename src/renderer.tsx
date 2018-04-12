@@ -3,7 +3,22 @@
 // All of the Node.js APIs are available in this process.
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  Nav,
+  Navbar,
+  NavbarBrand,
+  NavbarToggler,
+  NavItem,
+  NavLink,
+  Row,
+} from "reactstrap";
 
 import { ACSClusterDefinitionForm, IClusterDefinition } from "./ACSClusterDefinitionForm";
 import { ACSEngine } from "./ACSEngine";
@@ -61,21 +76,30 @@ class App extends React.Component {
   public render() {
     return (
       <div className="App">
-        <button className="acs" onClick={this.checkACSEngine.bind(this)}>
-          Check acs-engine binary is executable
-        </button>
-        <button className="acs-test" onClick={this.callACSEngine.bind(this)}>
-          Check for acs-engine in $PATH
-        </button>
-        {this.state.stdout && (
-          <pre className="stdout">
-            <code>{this.state.stdout}</code>
-          </pre>
-        )}
+        <Navbar color="dark" dark expand="md">
+          <NavbarBrand href="/">ElectACS</NavbarBrand>
+        </Navbar>
         <Container>
+          <Row>
+            <Col>
+              <Button color="primary" onClick={this.checkACSEngine.bind(this)}>
+                Check acs-engine binary is executable
+              </Button>
+              <Button color="info" onClick={this.callACSEngine.bind(this)}>
+                Check for acs-engine in $PATH
+              </Button>
+              {this.state.stdout && (
+                <pre className="stdout">
+                  <code>{this.state.stdout}</code>
+                </pre>
+              )}
+            </Col>
+          </Row>
           <ACSClusterDefinitionForm
-            apiVersion={this.state.clusterDefn.apiVersion}
-            properties={this.state.clusterDefn.properties}
+            clusterDefinition={{
+              apiVersion: this.state.clusterDefn.apiVersion,
+              properties: this.state.clusterDefn.properties,
+            }}
           />
           <Row>
             <Col>

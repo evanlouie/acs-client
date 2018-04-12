@@ -7,7 +7,7 @@
  */
 
 // AADProfile specifies attributes for AAD integration
-interface IAADProfile {
+export interface IAADProfile {
   clientAppID?: string;
   serverAppID?: string;
   tenantID?: string;
@@ -15,7 +15,7 @@ interface IAADProfile {
 }
 
 // AgentPoolProfile represents an agent pool definition
-interface IAgentPoolProfile {
+export interface IAgentPoolProfile {
   name: string;
   count: number;
   vmSize: string;
@@ -47,7 +47,7 @@ interface IAgentPoolProfile {
 //    <KV_NAME> is the name of the keyvault
 //    <NAME> is the name of the secret
 //    <VERSION> (optional) is the version of the secret (default: the latest version)
-interface ICertificateProfile {
+export interface ICertificateProfile {
   caCertificate?: string;
   caPrivateKey?: string;
   apiServerCertificate?: string;
@@ -69,7 +69,7 @@ type ClassicAgentPoolProfileType = string;
 
 // CloudProviderConfig contains the KubernetesConfig parameters specific to the Cloud Provider
 // TODO use this when strict JSON checking accommodates struct embedding
-interface ICloudProviderConfig {
+export interface ICloudProviderConfig {
   cloudProviderBackoff?: boolean;
   cloudProviderBackoffRetries?: number;
   cloudProviderBackoffJitter?: number;
@@ -82,7 +82,7 @@ interface ICloudProviderConfig {
 
 // ContainerService complies with the ARM model of
 // resource definition in a JSON template.
-interface IContainerService {
+export interface IContainerService {
   id?: string;
   location?: string;
   name?: string;
@@ -93,7 +93,7 @@ interface IContainerService {
 }
 
 // DcosConfig Configuration for DC/OS
-interface IDcosConfig {
+export interface IDcosConfig {
   dcosBootstrapURL?: string;
   dcosWindowsBootstrapURL?: string;
 }
@@ -102,14 +102,14 @@ interface IDcosConfig {
 type Distro = string;
 
 // Extension represents an extension definition in the master or agentPoolProfile
-interface IExtension {
+export interface IExtension {
   name?: string;
   singleOrAll?: string;
   template?: string;
 }
 
 // ExtensionProfile represents an extension definition
-interface IExtensionProfile {
+export interface IExtensionProfile {
   name?: string;
   version?: string;
   extensionParameters?: string;
@@ -124,20 +124,20 @@ interface IExtensionProfile {
 // with the file name <UppercaseThumbprint>.crt for the X509 certificate file
 // and <UppercaseThumbprint>.prv for the private key. Both of these files are .pem formatted.
 // On windows the certificate will be saved in the specified store.
-interface IKeyVaultCertificate {
+export interface IKeyVaultCertificate {
   certificateUrl?: string;
   certificateStore?: string;
 }
 
 // KeyVaultID specifies a key vault
-interface IKeyVaultID {
+export interface IKeyVaultID {
   id?: string;
 }
 
 // KeyVaultSecrets specifies certificates to install on the pool
 // of machines from a given key vault
 // the key vault specified must have been granted read permissions to CRP
-interface IKeyVaultSecrets {
+export interface IKeyVaultSecrets {
   sourceVault?: IKeyVaultID;
   vaultCertificates?: IKeyVaultCertificate[];
 }
@@ -151,14 +151,14 @@ interface IKeyVaultSecrets {
 //    <KV_NAME> is the name of the keyvault
 // The 'SecretName' is the name of the secret in the keyvault
 // The 'SecretVersion' (optional) is the version of the secret (default: the latest version)
-interface IKeyvaultSecretRef {
+export interface IKeyvaultSecretRef {
   vaultID: string;
   secretName: string;
   version?: string;
 }
 
 // KubernetesAddon defines a list of addons w/ configuration to include with the cluster deployment
-interface IKubernetesAddon {
+export interface IKubernetesAddon {
   name?: string;
   enabled?: boolean;
   containers?: IKubernetesContainerSpec[];
@@ -167,7 +167,7 @@ interface IKubernetesAddon {
 
 // KubernetesConfig contains the Kubernetes config structure, containing
 // Kubernetes specific configuration
-interface IKubernetesConfig {
+export interface IKubernetesConfig {
   kubernetesImageBase?: string;
   clusterSubnet?: string;
   dnsServiceIP?: string;
@@ -207,7 +207,7 @@ interface IKubernetesConfig {
 }
 
 // KubernetesContainerSpec defines configuration for a container spec
-interface IKubernetesContainerSpec {
+export interface IKubernetesContainerSpec {
   name?: string;
   image?: string;
   cpuRequests?: string;
@@ -217,7 +217,7 @@ interface IKubernetesContainerSpec {
 }
 
 // LinuxProfile represents the linux parameters passed to the cluster
-interface ILinuxProfile {
+export interface ILinuxProfile {
   adminUsername: string;
   // ssh: Object; // Not sure what should be
   ssh: { publicKeys: Array<{ keyData: string }> };
@@ -226,7 +226,7 @@ interface ILinuxProfile {
 }
 
 // MasterProfile represents the definition of the master cluster
-interface IMasterProfile {
+export interface IMasterProfile {
   count: number;
   dnsPrefix: string;
   vmSize: string;
@@ -250,7 +250,7 @@ interface IMasterProfile {
 type OSType = string;
 
 // OrchestratorProfile contains Orchestrator properties
-interface IOrchestratorProfile {
+export interface IOrchestratorProfile {
   orchestratorType: string;
   orchestratorRelease?: string;
   orchestratorVersion?: string;
@@ -272,11 +272,11 @@ export interface IProperties {
   aadProfile?: IAADProfile;
   [key: string]:
     | undefined
+    | ProvisioningState
     | IOrchestratorProfile
     | IMasterProfile
     | IAgentPoolProfile[]
     | ILinuxProfile
-    | ProvisioningState
     | IExtensionProfile[]
     | IWindowsProfile
     | IServicePrincipalProfile
@@ -288,13 +288,13 @@ export interface IProperties {
 type ProvisioningState = string;
 
 // PublicKey represents an SSH key for LinuxProfile
-interface IPublicKey {
+export interface IPublicKey {
   keyData?: string;
 }
 
 // ResourcePurchasePlan defines resource plan as required by ARM
 // for billing purposes.
-interface IResourcePurchasePlan {
+export interface IResourcePurchasePlan {
   name?: string;
   product?: string;
   promotionCode?: string;
@@ -305,14 +305,14 @@ interface IResourcePurchasePlan {
 // The 'Secret' and 'KeyvaultSecretRef' parameters are mutually exclusive
 // The 'Secret' parameter should be a secret in plain text.
 // The 'KeyvaultSecretRef' parameter is a reference to a secret in a keyvault.
-interface IServicePrincipalProfile {
+export interface IServicePrincipalProfile {
   clientId?: string;
   secret?: string;
   keyvaultSecretRef?: IKeyvaultSecretRef;
 }
 
 // WindowsProfile represents the windows parameters passed to the cluster
-interface IWindowsProfile {
+export interface IWindowsProfile {
   adminUsername?: string;
   adminPassword?: string;
   imageVersion?: string;

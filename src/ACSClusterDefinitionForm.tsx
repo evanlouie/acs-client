@@ -1,3 +1,4 @@
+import * as hljs from "highlight.js";
 import { Map } from "immutable";
 import React from "react";
 import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
@@ -14,20 +15,19 @@ export interface IClusterDefinition {
   properties: IProperties;
 }
 
-export class ACSClusterDefinitionForm extends React.Component<
-  IClusterDefinition,
-  { clusterDefinition: IClusterDefinition; form: Map<string, any> }
-> {
-  constructor(props: IClusterDefinition) {
-    super(props);
-    this.state = { clusterDefinition: props, form: Map(props) };
-  }
+export class ACSClusterDefinitionForm extends React.Component<{
+  clusterDefinition: IClusterDefinition;
+}> {
+  public state = {
+    ...this.props,
+    immutable: Map({ ...this.props.clusterDefinition }),
+  };
 
   public render() {
-    const { form } = this.state;
-    const apiVersion = form.get("apiVersion");
-    const properties = form.get("properties");
-    console.log(properties);
+    const { immutable } = this.state;
+    const apiVersion = immutable.get("apiVersion") as string;
+    const properties = immutable.get("properties") as IProperties;
+
     const { orchestratorProfile, masterProfile, agentPoolProfiles, linuxProfile } = properties;
 
     return (
@@ -51,6 +51,7 @@ export class ACSClusterDefinitionForm extends React.Component<
               const value = properties[key];
               return (
                 <div className={`ACSClusterDefinitionForm__${key}`}>
+                  <Label for={key}>{key}</Label>
                   {this.generateFormGroup(value, ["properties", key])}
                 </div>
               );
@@ -59,7 +60,14 @@ export class ACSClusterDefinitionForm extends React.Component<
           <Col md={6}>
             <h3>JSON</h3>
             <pre>
-              <code>{JSON.stringify(this.state.form.toJS(), null, 2)}</code>
+              <code
+                dangerouslySetInnerHTML={{
+                  __html: hljs.highlight(
+                    "json",
+                    JSON.stringify(this.state.immutable.toJSON(), null, 2),
+                  ).value,
+                }}
+              />
             </pre>
           </Col>
         </Row>
@@ -101,7 +109,9 @@ export class ACSClusterDefinitionForm extends React.Component<
               name={key}
               id={key}
               value={value}
-              onChange={e => this.updateProperty.bind(this)([...keyPath, key], e.target.value)}
+              onChange={e =>
+                this.updateProperty.bind(this)([...keyPath, key], Number.parseInt(e.target.value))
+              }
             />
           </FormGroup>
         );
@@ -126,21 +136,14 @@ export class ACSClusterDefinitionForm extends React.Component<
   }
 
   private updateProperty(keyPath: string[], value: any) {
-    console.log(keyPath);
-    const { form } = this.state;
-    const updatedForm = form.setIn(keyPath, value);
-    this.setState({ form: updatedForm });
+    console.log(keyPath, value);
+    const immutable = this.state.immutable.setIn(keyPath, value);
+    this.setState({ immutable });
   }
 
   private updateApiVersion(apiVersion: string) {
     const clusterDefinition = { ...this.state.clusterDefinition };
     clusterDefinition.apiVersion = apiVersion;
-    this.setState({ clusterDefinition });
-  }
-
-  private updateProperties(properties: IProperties) {
-    const clusterDefinition = { ...this.state.clusterDefinition };
-    clusterDefinition.properties = properties;
     this.setState({ clusterDefinition });
   }
 

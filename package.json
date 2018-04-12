@@ -1,7 +1,7 @@
 {
-  "name": "electron-quick-start-typescript",
+  "name": "acs-client",
   "version": "1.0.0",
-  "description": "A minimal Electron application written with Typescript",
+  "description": "ACS Engine Client",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",

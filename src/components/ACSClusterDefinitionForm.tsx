@@ -48,7 +48,7 @@ export const ACSClusterDefinitionForm = (props: IACSClusterDefinitionForm) => {
       {Object.keys(properties).map(key => {
         const value = properties[key];
         return (
-          <div className={`ACSClusterDefinitionForm__${key}`}>
+          <div className={`ACSClusterDefinitionForm__${key}`} key={key}>
             <Label for={key}>{key}</Label>
             {generateFormGroup(value, ["properties", key], update)}
           </div>
@@ -73,7 +73,7 @@ const generateFormGroup = (
 
     if (typeof value === "string") {
       return (
-        <FormGroup style={{ marginLeft }}>
+        <FormGroup style={{ marginLeft }} key={key}>
           <Label for={key}>{key}:</Label>
           <Input
             bsSize="sm"
@@ -87,7 +87,7 @@ const generateFormGroup = (
       );
     } else if (typeof value === "number") {
       return (
-        <FormGroup style={{ marginLeft }}>
+        <FormGroup style={{ marginLeft }} key={key}>
           <Label for={key}>{key}:</Label>
           <Input
             bsSize="sm"
@@ -101,7 +101,7 @@ const generateFormGroup = (
       );
     } else if (Array.isArray(value)) {
       return (
-        <FormGroup style={{ marginLeft }}>
+        <FormGroup style={{ marginLeft }} key={key}>
           <Label for={key}>{key}:</Label>
           {value.map((val, index) =>
             generateFormGroup(val, [...keyPath, key, index.toString()], updateProperty),
@@ -110,7 +110,7 @@ const generateFormGroup = (
       );
     } else if (typeof value === "object") {
       return (
-        <FormGroup style={{ marginLeft }}>
+        <FormGroup style={{ marginLeft }} key={key}>
           <Label for={key}>{key}:</Label>
           {generateFormGroup(value, [...keyPath, key], updateProperty)}
         </FormGroup>

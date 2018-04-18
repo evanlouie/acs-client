@@ -17,6 +17,12 @@ import { ACSEngine } from "./shared/ACSEngine";
 import { IProperties } from "./types";
 
 class App extends React.PureComponent {
+  private checkAcsEngineButtonRef = React.createRef<HTMLButtonElement>();
+
+  public componentDidMount() {
+    this.checkAcsEngineButtonRef.current!.click();
+  }
+
   public render() {
     return (
       <div className="App">
@@ -29,9 +35,12 @@ class App extends React.PureComponent {
               <StdOutContext.Consumer>
                 {state => (
                   <Col>
-                    <Button color="primary" onClick={this.checkACSEngine(state.log)}>
-                      Check for ACS-Engine
-                    </Button>
+                    <span
+                      ref={this.checkAcsEngineButtonRef}
+                      onClick={this.checkACSEngine(state.log)}
+                    >
+                      <Button color="primary">Check for ACS-Engine</Button>
+                    </span>
                     <Button color="info" onClick={this.callACSEngine(state.log)}>
                       Run ACS Engine
                     </Button>

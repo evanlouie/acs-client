@@ -3,131 +3,93 @@
 // All of the Node.js APIs are available in this process.
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { Button, Col, Container, Navbar, NavbarBrand, Row } from "reactstrap";
+
 import {
-  Button,
-  Col,
-  Container,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-  Nav,
-  Navbar,
-  NavbarBrand,
-  NavbarToggler,
-  NavItem,
-  NavLink,
-  Row,
-} from "reactstrap";
+  ACSClusterDefinitionForm,
+  ACSClusterDefinitionFormJSON,
+} from "./components/ACSClusterDefinitionForm";
+import { StdOut } from "./components/StdOut";
+import { Context } from "./contexts";
+import { ClusterDefinitionContext } from "./contexts/ClusterDefinitionContext";
+import { StdOutContext } from "./contexts/StdOutContext";
+import { ACSEngine } from "./shared/ACSEngine";
+import { IProperties } from "./types";
 
-import { ACSClusterDefinitionForm, IClusterDefinition } from "./ACSClusterDefinitionForm";
-import { ACSEngine } from "./ACSEngine";
-
-class App extends React.Component {
-  public state: { stdout: string; clusterDefn: IClusterDefinition } = {
-    // tslint:disable
-    clusterDefn: {
-      apiVersion: "vlabs",
-      properties: {
-        orchestratorProfile: {
-          orchestratorType: "Kubernetes",
-          orchestratorRelease: "1.9",
-          kubernetesConfig: {
-            apiServerConfig: {
-              "--admission-control":
-                "NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DenyEscalatingExec,Initializers,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota",
-              "--runtime-config": "admissionregistration.k8s.io/v1alpha1",
-            },
-          },
-        },
-        masterProfile: {
-          count: 1,
-          dnsPrefix: "",
-          vmSize: "Standard_DS2_v2",
-        },
-        agentPoolProfiles: [
-          {
-            name: "agentpool1",
-            count: 2,
-            vmSize: "Standard_DS2_v2",
-            availabilityProfile: "AvailabilitySet",
-          },
-        ],
-        linuxProfile: {
-          adminUsername: "azureuser",
-          ssh: {
-            publicKeys: [
-              {
-                keyData: "",
-              },
-            ],
-          },
-        },
-        servicePrincipalProfile: {
-          clientId: "",
-          secret: "",
-        },
-      },
-    },
-    // tslint:enable
-    stdout: "",
-  };
-
+class App extends React.PureComponent {
   public render() {
     return (
       <div className="App">
-        <Navbar color="dark" dark expand="md">
-          <NavbarBrand href="/">ElectACS</NavbarBrand>
-        </Navbar>
-        <Container>
-          <Row>
-            <Col>
-              <Button color="primary" onClick={this.checkACSEngine.bind(this)}>
-                Check acs-engine binary is executable
-              </Button>
-              <Button color="info" onClick={this.callACSEngine.bind(this)}>
-                Check for acs-engine in $PATH
-              </Button>
-              {this.state.stdout && (
-                <pre className="stdout">
-                  <code>{this.state.stdout}</code>
-                </pre>
-              )}
-            </Col>
-          </Row>
-          <ACSClusterDefinitionForm
-            clusterDefinition={{
-              apiVersion: this.state.clusterDefn.apiVersion,
-              properties: this.state.clusterDefn.properties,
-            }}
-          />
-          <Row>
-            <Col>
-              <div className="float-right">
-                <Button color="primary">Deploy!</Button>
-              </div>
-            </Col>
-          </Row>
-        </Container>
+        <Context>
+          <Navbar color="dark" dark expand="md" style={{ marginBottom: "1em" }}>
+            <NavbarBrand href="/">ACS Engine UI</NavbarBrand>
+          </Navbar>
+          <Container fluid>
+            <Row>
+              <StdOutContext.Consumer>
+                {state => (
+                  <Col>
+                    <Button color="primary" onClick={this.checkACSEngine(state.log)}>
+                      Check for ACS-Engine
+                    </Button>
+                    <Button color="info" onClick={this.callACSEngine(state.log)}>
+                      Run ACS Engine
+                    </Button>
+                    <Button color="secondary" onClick={this.clearStdOut(state.update)}>
+                      Clear stdout
+                    </Button>
+                  </Col>
+                )}
+              </StdOutContext.Consumer>
+            </Row>
+            <Row>
+              <ClusterDefinitionContext.Consumer>
+                {state => {
+                  const clusterDefinition = {
+                    apiVersion: state.clusterDefinition.get("apiVersion") as string,
+                    properties: state.clusterDefinition.get("properties") as IProperties,
+                  };
+                  return [
+                    <Col md={4} key="form">
+                      <ACSClusterDefinitionForm
+                        clusterDefinition={clusterDefinition}
+                        update={state.update}
+                      />
+                    </Col>,
+                    <Col md={4} key="json">
+                      {ACSClusterDefinitionFormJSON(clusterDefinition)}
+                    </Col>,
+                  ];
+                }}
+              </ClusterDefinitionContext.Consumer>
+              <StdOutContext.Consumer>
+                {state => <Col md={4}>{StdOut(state.stdout)}</Col>}
+              </StdOutContext.Consumer>
+            </Row>
+          </Container>
+        </Context>
       </div>
     );
   }
 
-  private log(out: string) {
-    const withNewLine: string = !!out.match(/\n$/) ? out : out + "\n";
-    const stdout: string = withNewLine + this.state.stdout;
-    this.setState({ stdout });
-  }
+  private clearStdOut = (update: (stdout: string) => Promise<any>) => async () => {
+    return update("");
+  };
 
-  private async checkACSEngine() {
+  private checkACSEngine = (log: (out: string) => Promise<any>) => async () => {
+    await log(`Checking for 'acs-engine' in ${ACSEngine.getACSEnginePath()}`);
     const isInstalled = await ACSEngine.acsIsInstalled();
-    this.log(`Packaged acs-engine executable: ${isInstalled}\n`);
-  }
+    await log(`Packaged acs-engine executable by electron process: ${isInstalled}\n`);
+    if (isInstalled) {
+      const version = await ACSEngine.getVersion();
+      await log(`ACS Engine Version: ${version}`);
+    }
+  };
 
-  private async callACSEngine() {
+  private callACSEngine = (log: (out: string) => Promise<any>) => async () => {
     const stdout = await ACSEngine.call();
-    this.log(stdout);
-  }
+    return log(stdout);
+  };
 }
 
 ReactDOM.render(<App />, document.getElementById("root") as HTMLElement);

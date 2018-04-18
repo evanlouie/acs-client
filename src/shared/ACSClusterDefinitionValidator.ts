@@ -1,4 +1,4 @@
-import { IAgentPoolProfile, ILinuxProfile } from "./types";
+import { IAgentPoolProfile } from "../types";
 
 interface IValidator {
   [key: string]: ((value: any) => boolean) | IValidator;

@@ -65,7 +65,7 @@ export interface ICertificateProfile {
 }
 
 // ClassicAgentPoolProfileType represents types of classic profiles
-type ClassicAgentPoolProfileType = string;
+// type ClassicAgentPoolProfileType = string;
 
 // CloudProviderConfig contains the KubernetesConfig parameters specific to the Cloud Provider
 // TODO use this when strict JSON checking accommodates struct embedding
@@ -318,4 +318,13 @@ export interface IWindowsProfile {
   imageVersion?: string;
   WindowsImageSourceUrl?: string;
   secrets?: IKeyVaultSecrets[];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Custom Types
+////////////////////////////////////////////////////////////////////////////////
+
+export interface IClusterDefinition {
+  apiVersion: string;
+  properties: IProperties;
 }

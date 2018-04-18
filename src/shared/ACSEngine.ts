@@ -6,15 +6,15 @@ export class ACSEngine {
   public static acsProjectPath: string = "lib/acs-engine";
 
   public static getACSEnginePath(): string {
-    return path.join(__dirname, "..", this.acsProjectPath);
+    return path.join(__dirname, "..", "..", this.acsProjectPath);
   }
 
   public static async acsIsInstalled(): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<boolean>(resolve => {
       fs.access(this.getACSEnginePath(), fs.constants.X_OK, err => {
         if (err) {
           console.error(err);
-          return reject(false);
+          return resolve(false);
         }
         return resolve(true);
       });
